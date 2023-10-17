@@ -4,7 +4,8 @@ services:
   scylla:
     build:
       context: .
-      target: prod
+      # dockerfile: Dockerfile-alpine
+      # target: prod
     volumes:
       - /var/www/scylla:/var/www/scylla
     ports:

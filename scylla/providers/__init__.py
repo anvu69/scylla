@@ -6,6 +6,7 @@ from scylla.providers.pubproxy_provider import PubproxyProvider
 from scylla.providers.rmccurdy_provider import RmccurdyProvider
 from scylla.providers.rudnkh_provider import RudnkhProvider
 from scylla.providers.the_speedX_provider import TheSpeedXProvider
+from .github_provider import GithubProvider
 from .a2u_provider import A2uProvider
 from .base_provider import BaseProvider
 from .cool_proxy_provider import CoolProxyProvider
@@ -19,24 +20,25 @@ from .spys_one_provider import SpysOneProvider
 from .xici_provider import XiciProvider
 
 all_providers = [
-    A2uProvider,
-    CoolProxyProvider,
-    Data5uProvider,
-    FreeProxyListProvider,
-    HttpProxyProvider,
+    GithubProvider
+    # A2uProvider,
+    # CoolProxyProvider,
+    # Data5uProvider,
+    # FreeProxyListProvider,
+    # HttpProxyProvider,
     # KuaidailiProvider,
-    SpyMeProvider,
-    SpysOneProvider,
+    # SpyMeProvider,
+    # SpysOneProvider,
     # XiciProvider
-    IpaddressProvider,
-    ProxyListProvider,
-    ProxyScraperProvider,
-    ProxylistsProvider,
-    ProxyNovaProvider,
-    PubproxyProvider,
-    RmccurdyProvider,
-    RudnkhProvider,
-    TheSpeedXProvider
+    # IpaddressProvider,
+    # ProxyListProvider,
+    # ProxyScraperProvider,
+    # ProxylistsProvider,
+    # ProxyNovaProvider,
+    # PubproxyProvider,
+    # RmccurdyProvider,
+    # RudnkhProvider,
+    # TheSpeedXProvider
 ]
 
 # Provider references:

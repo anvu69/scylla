@@ -12,20 +12,18 @@ features:
 - Automatic proxy ip crawling and validation
 - Easy-to-use JSON API
 - Simple but beautiful web-based user interface (eg. geographical
-    distribution of proxies)
+  distribution of proxies)
 - Get started with only **1 command** minimally
 - Simple HTTP Forward proxy server
 - [Scrapy] and [requests] integration with only 1 line of code
-    minimally
+  minimally
 - Headless browser crawling
 
 对于偏好中文的用户，请阅读 [中文文档](https://scylla.wildcat.io/zh/latest/)。For those who prefer to use Chinese, please read the [Chinese Documentation](https://scylla.wildcat.io/zh/latest/).
 
-Get started
-===========
+# Get started
 
-Installation
-------------
+## Installation
 
 ### Install with Docker (highly recommended)
 
@@ -62,10 +60,10 @@ export SANIC_NO_UVLOOP=true
 export SANIC_NO_UJSON=true
 pip3 install sanic
 ```
+
 If this also fails, yoi will need to manual install sanic from source.
 
-Usage
------
+## Usage
 
 This is an example of running a service locally (`localhost`), using
 port `8899`.
@@ -82,13 +80,13 @@ http://localhost:8899/api/v1/proxies
 
 Optional URL parameters:
 
-| Parameters  | Default value | Description                                                  |
-| ----------- | ------------- | ------------------------------------------------------------ |
-| `page`      | `1`           | The page number                                              |
-| `limit`     | `20`          | The number of proxies shown on each page                     |
+| Parameters  | Default value | Description                                                                                                       |
+| ----------- | ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `page`      | `1`           | The page number                                                                                                   |
+| `limit`     | `20`          | The number of proxies shown on each page                                                                          |
 | `anonymous` | `any`         | Show anonymous proxies or not. Possible values：`true`, only anonymous proxies; `false`, only transparent proxies |
-| `https`     | `any` | Show HTTPS proxies or not. Possible values：`true`, only HTTPS proxies; `false`, only HTTP proxies |
-| `countries`   | None | Filter proxies for specific countries. Format example: ``US``, or multi-countries: `US,GB` |
+| `https`     | `any`         | Show HTTPS proxies or not. Possible values：`true`, only HTTPS proxies; `false`, only HTTP proxies                |
+| `countries` | None          | Filter proxies for specific countries. Format example: `US`, or multi-countries: `US,GB`                          |
 
 Sample result:
 
@@ -140,6 +138,46 @@ Sample result:
 }
 ```
 
+#### Random Proxy IP
+
+```bash
+http://localhost:8899/api/v1/proxy
+```
+
+Same api Proxy IP List but return only one proxy item random in valid proxy list.
+
+Optional URL parameters:
+
+| Parameters  | Default value | Description                                                                                                       |
+| ----------- | ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `anonymous` | `any`         | Show anonymous proxies or not. Possible values：`true`, only anonymous proxies; `false`, only transparent proxies |
+| `https`     | `any`         | Show HTTPS proxies or not. Possible values：`true`, only HTTPS proxies; `false`, only HTTP proxies                |
+| `countries` | None          | Filter proxies for specific countries. Format example: `US`, or multi-countries: `US,GB`                          |
+
+Sample result:
+
+```json
+{
+  "id": 75,
+  "ip": "75.151.213.85",
+  "port": 8080,
+  "is_valid": true,
+  "created_at": 1527590676,
+  "updated_at": 1527593702,
+  "latency": 268.0,
+  "stability": 0.3,
+  "is_anonymous": true,
+  "is_https": true,
+  "attempts": 1,
+  "https_attempts": 0,
+  "location": "32.3706,-90.1755",
+  "organization": "AS7922 Comcast Cable Communications, LLC",
+  "region": "Mississippi",
+  "country": "US",
+  "city": "Jackson"
+}
+```
+
 #### System Statistics
 
 ```bash
@@ -150,10 +188,10 @@ Sample result:
 
 ```json
 {
-    "median": 181.2566407083,
-    "valid_count": 1780,
-    "total_count": 9528,
-    "mean": 174.3290085201
+  "median": 181.2566407083,
+  "valid_count": 1780,
+  "total_count": 9528,
+  "mean": 174.3290085201
 }
 ```
 
@@ -203,19 +241,16 @@ Screenshot:
 
 ![screenshot-geo-distribution](https://user-images.githubusercontent.com/2396817/40653599-9458b6b8-6333-11e8-8e6e-1d90271fc083.png)
 
-API Documentation
-=================
+# API Documentation
 
 Please read [Module
 Index](https://scylla.wildcat.io/en/latest/py-modindex.html).
 
-Roadmap
-=======
+# Roadmap
 
 Please see [Projects](https://github.com/imWildCat/scylla/projects).
 
-Development and Contribution
-============================
+# Development and Contribution
 
 ```bash
 git clone https://github.com/imWildCat/scylla.git
@@ -227,8 +262,7 @@ npm install # or `yarn install`
 make assets-build
 ```
 
-Testing
-=======
+# Testing
 
 If you wish to run tests locally, the commands are shown below:
 
@@ -240,21 +274,18 @@ pytest tests/
 You are welcomed to add more test cases to this project, increasing the
 robustness of this project.
 
-Naming of This Project
-======================
+# Naming of This Project
 
 [Scylla](http://prisonbreak.wikia.com/wiki/Scylla) is derived from the
 name of a group of memory chips in the American TV series, [Prison
 Break](https://en.wikipedia.org/wiki/Prison_Break). This project was
 named after this American TV series to pay tribute to it.
 
-Help
-======================
+# Help
+
 [How to install Python Scylla on CentOS7](https://digcodes.com/how-to-install-python-scylla-on-centos7/)
 
-
-Donation
-========
+# Donation
 
 If you find this project useful, could you please donate some money to
 it?
@@ -264,24 +295,19 @@ to develop new features continuously! 🎉 Thank you!
 
 The ways for donation are shown below:
 
-PayPal
-------
+## PayPal
 
 [![paypal_donation](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=5DXFA7WGWPZBN)
 
-Alipay or WeChat Pay
---------------------
+## Alipay or WeChat Pay
 
 [![Alipay And WeChat Donation]][Alipay and WeChat Donation]
 
-License
-=======
+# License
 
 Apache License 2.0. For more details, please read the
 [LICENSE](https://github.com/imWildCat/scylla/blob/master/LICENSE) file.
 
 [Alipay and WeChat Donation]: https://user-images.githubusercontent.com/2396817/40589594-cfb0e49e-61e7-11e8-8f7d-c55a29676c40.png
-
-
-  [Scrapy]: https://scrapy.org
-  [requests]: http://docs.python-requests.org/
+[Scrapy]: https://scrapy.org
+[requests]: http://docs.python-requests.org/

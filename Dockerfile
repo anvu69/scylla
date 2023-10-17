@@ -30,13 +30,12 @@ WORKDIR /app
 COPY --from=node-build /root/scylla/assets ./scylla/assets
 COPY requirements.txt .
 RUN pip3 install -r requirements.txt
+RUN python3 -m playwright install chromium --with-deps
 COPY . .
 RUN python3 setup.py install
 
 RUN mkdir -p /var/www/scylla
 VOLUME /var/www/scylla
-
-RUN python3 -m playwright install chromium --with-deps
 
 EXPOSE 8899
 EXPOSE 8081

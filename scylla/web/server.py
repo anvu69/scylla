@@ -7,6 +7,8 @@ from sanic.request import Request
 from sanic.response import json
 from sanic_cors import CORS
 
+from peewee import fn
+
 from scylla.database import ProxyIP
 from scylla.loggings import logger
 
@@ -112,6 +114,58 @@ async def api_v1_proxies(request: Request):
         'total_page': math.ceil(count / limit),
     })
 
+@app.route('/api/v1/proxy')
+async def api_v1_proxy(request: Request):
+    args = request.args
+
+    is_anonymous = 2  # 0: no, 1: yes, 2: any
+
+    if 'anonymous' in args:
+        str_anonymous = args.get('anonymous')
+        if str_anonymous == 'true':
+            is_anonymous = 1
+        elif str_anonymous == 'false':
+            is_anonymous = 0
+        else:
+            is_anonymous = 2
+
+    str_https = None
+    if 'https' in args:
+        str_https = args.get('https')
+
+    country_list = []
+    if 'countries' in args:
+        countries = args.get('countries')
+        country_list = countries.split(',')
+
+    proxy_initial_query = _get_valid_proxies_query()
+
+    proxy_query = proxy_initial_query
+
+    if is_anonymous != 2:
+        if is_anonymous == 1:
+            proxy_query = proxy_initial_query.where(ProxyIP.is_anonymous == True)
+        elif is_anonymous == 0:
+            proxy_query = proxy_initial_query.where(ProxyIP.is_anonymous == False)
+
+    if str_https:
+        if str_https == 'true':
+            proxy_query = proxy_initial_query.where(ProxyIP.is_https == True)
+        elif str_https == 'false':
+            proxy_query = proxy_initial_query.where(ProxyIP.is_https == False)
+
+    if country_list and len(country_list) > 0:
+        proxy_query = proxy_query.where(ProxyIP.country << country_list)
+
+    proxy = proxy_query.order_by(fn.random(), ProxyIP.latency).limit(1)
+
+    logger.debug('Perform SQL query: {}'.format(proxy_query.sql()))
+
+    dict_model = model_to_dict(proxy[0])
+    dict_model['created_at'] = dict_model['created_at'].isoformat()
+    dict_model['updated_at'] = dict_model['updated_at'].isoformat()
+
+    return json(dict_model)
 
 @app.route('/api/v1/stats')
 async def api_v1_stats(request: Request):

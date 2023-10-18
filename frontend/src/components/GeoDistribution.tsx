@@ -1,136 +1,162 @@
-import * as React from 'react';
-import axios from "axios";
-import {getBaseURL, Proxy, ResponseJSON} from "../utils";
-import ReactTooltip from "react-tooltip"
+import * as React from 'react'
+import axios from 'axios'
+import { getBaseURL, Proxy, ResponseJSON } from '../utils'
+import ReactTooltip from 'react-tooltip'
 
 const {
-    ComposableMap,
-    ZoomableGroup,
-    Geographies,
-    Geography,
-    Markers,
-    Marker,
-} = require('react-simple-maps');
+  ComposableMap,
+  ZoomableGroup,
+  Geographies,
+  Geography,
+  Markers,
+  Marker,
+} = require('react-simple-maps')
 
-export interface GeoDistributionProps {
-}
+export interface GeoDistributionProps {}
 
 export interface GeoDistributionState {
-    proxies: Proxy[],
+  proxies: Proxy[]
 }
 
-export default class GeoDistribution extends React.Component<GeoDistributionProps, GeoDistributionState> {
-
-    constructor(props: GeoDistributionProps) {
-        super(props);
-        this.state = {
-            proxies: [],
-        };
+export default class GeoDistribution extends React.Component<
+  GeoDistributionProps,
+  GeoDistributionState
+> {
+  constructor(props: GeoDistributionProps) {
+    super(props)
+    this.state = {
+      proxies: [],
     }
+  }
 
-    componentDidMount() {
-        this.loadData();
+  componentDidMount() {
+    this.loadData()
+  }
+
+  render() {
+    function aa(dom) {
+      var ret = dom.state.proxies.map((p) => dom.renderMarker(p))
+      ReactTooltip.rebuild()
+      setTimeout(() => {
+        ReactTooltip.rebuild()
+      }, 100)
+      return ret
     }
-
-    render() {
-        function aa(dom) {
-            var ret = dom.state.proxies.map(p => dom.renderMarker(p));
-            ReactTooltip.rebuild();
-            setTimeout(() => {
+    // const position = [this.state.lat, this.state.lng];
+    return (
+      <div>
+        <ComposableMap style={{ width: '100%' }}>
+          <ZoomableGroup>
+            <Geographies
+              geography={
+                'https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/v0.12.x/topojson-maps/world-50m-simplified.json'
+              }
+            >
+              {(geographies: any, projection: any) =>
+                geographies.map((geography: any) => {
+                  return (
+                    <Geography
+                      key={
+                        geography.properties.ISO_A3 +
+                        '_' +
+                        geography.properties.NAME
+                      }
+                      geography={geography}
+                      projection={projection}
+                      style={{
+                        default: { fill: '#D8D8D8' },
+                        hover: { fill: '#D8D8D8' },
+                        pressed: { fill: '#D8D8D8' },
+                      }}
+                    />
+                  )
+                })
+              }
+            </Geographies>
+            <Markers>
+              {((self) => {
+                var ret = self.state.proxies.map((p) => self.renderMarker(p))
                 ReactTooltip.rebuild()
-            }, 100)
-            return ret;
-        }
-        // const position = [this.state.lat, this.state.lng];
-        return (
-            <div>
-                <ComposableMap style={{width: "100%"}}>
-                    <ZoomableGroup>
-                        <Geographies
-                            geography={'https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-50m-simplified.json'}>
-                            {(geographies: any, projection: any) => geographies.map((geography: any) => {
-                                    return (
-                                        <Geography
-                                            key={geography.properties.ISO_A3 + '_' + geography.properties.NAME}
-                                            geography={geography}
-                                            projection={projection}
-                                            style={{
-                                                default: {fill: "#D8D8D8"},
-                                                hover: {fill: "#D8D8D8"},
-                                                pressed: {fill: "#D8D8D8"},
-                                            }}
-                                        />
-                                    );
-                                }
-                            )}
-                        </Geographies>
-                        <Markers>
-                            {
-                                ((self) => {
-                                    var ret = self.state.proxies.map(p => self.renderMarker(p));
-                                    ReactTooltip.rebuild();
-                                    setTimeout(() => {
-                                        ReactTooltip.rebuild(); // rebuild after render
-                                    }, 100)
-                                    return ret;
-                                })(this)
-                            }
-                        </Markers>
-                    </ZoomableGroup>
-                </ComposableMap>
-                <ReactTooltip />
-            </div>
-        );
-    }
+                setTimeout(() => {
+                  ReactTooltip.rebuild() // rebuild after render
+                }, 100)
+                return ret
+              })(this)}
+            </Markers>
+          </ZoomableGroup>
+        </ComposableMap>
+        <ReactTooltip />
+      </div>
+    )
+  }
 
-    renderMarker(proxy: Proxy): JSX.Element | null {
-        const locationStr = proxy.location;
-        if (locationStr) {
-            const locations = locationStr.split(',');
+  renderMarker(proxy: Proxy): JSX.Element | null {
+    const locationStr = proxy.location
+    if (locationStr) {
+      const locations = locationStr.split(',')
 
-            return (
-                <Marker
-                    key={proxy.id}
-                    proxy={proxy}
-                    marker={{coordinates: [locations[1], locations[0]]}}
-                    style={{
-                        default: {fill: this.mapProxyColor(proxy)},
-                        hover: {fill: "#999"},
-                        pressed: {fill: "#000"},
-                    }}
-                >
-                    <circle data-html={true} data-tip={ proxy.ip + ":" + proxy.port + "<br>" + 
-                                                        proxy.country + ", " + proxy.city + "<br>" + 
-                                                        "latency: " + proxy.latency + "<br>" + 
-                                                        "anonymous: " + proxy.is_anonymous + "<br>" + 
-                                                        "https: " + proxy.is_https } 
-                                                        cx={0} cy={0} r={2}/>
-                </Marker>
-            );
-        } else {
-            return null;
-        }
+      return (
+        <Marker
+          key={proxy.id}
+          proxy={proxy}
+          marker={{ coordinates: [locations[1], locations[0]] }}
+          style={{
+            default: { fill: this.mapProxyColor(proxy) },
+            hover: { fill: '#999' },
+            pressed: { fill: '#000' },
+          }}
+        >
+          <circle
+            data-html={true}
+            data-tip={
+              proxy.ip +
+              ':' +
+              proxy.port +
+              '<br>' +
+              proxy.country +
+              ', ' +
+              proxy.city +
+              '<br>' +
+              'latency: ' +
+              proxy.latency +
+              '<br>' +
+              'anonymous: ' +
+              proxy.is_anonymous +
+              '<br>' +
+              'https: ' +
+              proxy.is_https
+            }
+            cx={0}
+            cy={0}
+            r={2}
+          />
+        </Marker>
+      )
+    } else {
+      return null
     }
+  }
 
-    mapProxyColor(proxy: Proxy): string {
-        if (proxy.latency < 180 && proxy.stability >= 0.6) {
-            return '#417505';
-        } else if (proxy.latency < 300 && proxy.stability >= 0.4) {
-            return '#F8E71C';
-        } else if (proxy.latency < 500 && proxy.stability > 0.0) {
-            return '#FF3824';
-        } else {
-            return '#000';
-        }
+  mapProxyColor(proxy: Proxy): string {
+    if (proxy.latency < 180 && proxy.stability >= 0.6) {
+      return '#417505'
+    } else if (proxy.latency < 300 && proxy.stability >= 0.4) {
+      return '#F8E71C'
+    } else if (proxy.latency < 500 && proxy.stability > 0.0) {
+      return '#FF3824'
+    } else {
+      return '#000'
     }
+  }
 
-    async loadData() {
-        const response = await axios.get(`${getBaseURL()}/api/v1/proxies?limit=4095`);
-        const res: ResponseJSON = response.data;
-        const proxies: Proxy[] = res.proxies;
-        this.setState({
-            proxies: proxies,
-        });
-    }
+  async loadData() {
+    const response = await axios.get(
+      `${getBaseURL()}/api/v1/proxies?limit=4095`
+    )
+    const res: ResponseJSON = response.data
+    const proxies: Proxy[] = res.proxies
+    this.setState({
+      proxies: proxies,
+    })
+  }
 }
-
